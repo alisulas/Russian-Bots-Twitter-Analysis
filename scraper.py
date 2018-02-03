@@ -20,7 +20,7 @@ USERS = [
 
 KEYWORDS = [
     'MAGA', 'ReleaseTheMemo', 'Nunes'
-    ]
+]
 
 class TweetListener(tweepy.StreamListener):
     '''
@@ -60,17 +60,35 @@ class TweetListener(tweepy.StreamListener):
         print("API Timeout")
         return True
 
+def get_user_ids(api, usernames):
+    '''
+    Function to return array of User IDs corresponding to Usernames in USERS
+    '''
+    result = []
+    for username in usernames:
+        try:
+            user = api.get_user(screen_name = username)
+            user_id = user.id
+            result.append(user_id)
+        except tweepy.error.TweepError:
+            pass
+    return result
+
+
+
 def main():
     # Authenticate with Twitter API
     auth = tweepy.OAuthHandler(cfg.API_KEY, cfg.API_SECRET)
     auth.set_access_token(cfg.ACCESS_TOKEN, cfg.ACCESS_SECRET)
     api = tweepy.API(auth)
 
+    # get User IDs from usernames in USERS array
+    # user_ids = get_user_ids(api, USERS)
+
     # Setup Listener
     listener = tweepy.Stream(auth, TweetListener(api))
 
     # Track tweets from USERS and KEYWORDS
-    # FIXME: need the User ID to follow users, not the username
     # listener.filter(follow = USERS, track = KEYWORDS)
     listener.filter(track = KEYWORDS)
     # listener.filter(follow = USERS)
