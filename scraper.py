@@ -5,10 +5,13 @@ from pymongo import MongoClient
 
 MONGO_DB = 'mongodb://localhost:27017/'
 
+KEYWORDS_PATH = "data/keywords.txt"
+USERS_PATH = "data/users.txt"
+
 USERS = [
     'smartdissent', 'SparkleSoup45', 'bbusa617', 'charlieJuliet', 'ChrisFromWI',
     'SCroixFreePress', 'wienerherzog2', 'PeggyRuppe', 'remleona', 'Answers2b4u',
-    'veradubs', 'HarryFerro', 'RussiaInsider', 'Rose4Justice', 'ChristTopNews',
+    'veradubs', 'HarryFerro', 'Rose3Justice', 'ChristTopNews',
     'actionScript3', 'willie_c', 'FilAmVA', 'pnehlen', 'Russ_Warrior', 'palestininianpr',
     '501Wittmann', 'TexanTruth42', 'VNLP2', 'elapoides', 'K1erry', 'justshootme_plz',
     'starrick1', 'RoseGeorossi', 'MaineFirstMedia', 'Axis__Mundi', 'Imperator_Rex3',
@@ -62,9 +65,34 @@ class TweetListener(tweepy.StreamListener):
         print("API Timeout")
         return True
 
-def get_user_ids(api, usernames):
+
+def read_from_textfile(filepath):
     '''
-    Function to return array of User IDs corresponding to Usernames in USERS
+    Function that reads textfiles and returns array of values
+    '''
+    return [line.rstrip('\n') for line in open(filepath)]
+
+def write_to_textfile(filepath, value_array):
+    '''
+    Function that accepts an array of values and write to a new textfile line-by-line
+    If the textfile already exists, you'll want to use `append_to_textfile` instead
+    '''
+    with open(filepath, 'w') as file:
+        for value in value_array:
+            file.write('{}\n'.format(value))
+
+def append_to_textfile(filepath, value_array):
+    '''
+    Function that accepts an array of values and appends them to existing textfile
+    '''
+    with open(filepath, 'a') as file:
+        for value in value_array:
+            file.write('{}\n'.format(value))
+
+def convert_username_to_userid(api, filename, usernames):
+    '''
+    Function that accepts an array of usernames and appends found user ids to
+    the supplied filename
     '''
     result = []
     for username in usernames:
@@ -74,8 +102,7 @@ def get_user_ids(api, usernames):
             result.append(user_id)
         except tweepy.error.TweepError:
             pass
-    return result
-
+    append_to_textfile(filename, result)
 
 
 def main():
@@ -84,16 +111,20 @@ def main():
     auth.set_access_token(cfg.ACCESS_TOKEN, cfg.ACCESS_SECRET)
     api = tweepy.API(auth)
 
-    # get User IDs from usernames in USERS array
-    # user_ids = get_user_ids(api, USERS)
+    # Convert usernames to user ids and store in textfile
+    # convert_username_to_userid(api, USERS_PATH, USERS)
+
+    user_list = read_from_textfile(USERS_PATH)
+    keywords_list = read_from_textfile(KEYWORDS_PATH)
 
     # Setup Listener
     listener = tweepy.Stream(auth, TweetListener(api))
 
     # Track tweets from USERS and KEYWORDS
-    # listener.filter(follow = USERS, track = KEYWORDS)
-    listener.filter(track = KEYWORDS)
-    # listener.filter(follow = USERS)
+    # listener.filter(follow = user_list, track = keywords_list)
+    listener.filter(follow = user_list[:3])
+    # listener.filter(track = keywords_list)
+    # listener.filter(follow = user_list)
 
 if __name__ == "__main__":
     main()
