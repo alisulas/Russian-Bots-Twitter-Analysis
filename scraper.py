@@ -38,7 +38,9 @@ class TweetListener(tweepy.StreamListener):
         '''
         Save JSON data to DB
         '''
-        self.db.tweet.insert(json.loads(tweet))
+        json_data = json.loads(tweet)
+        print("Tweet stored at " + json_data['created_at'])
+        self.db.tweet.insert(json_data)
 
     def on_connect(self):
         '''
