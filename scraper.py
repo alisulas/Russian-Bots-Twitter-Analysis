@@ -47,7 +47,7 @@ class TweetListener(tweepy.StreamListener):
 
     def on_connect(self):
         '''
-        Declare proper connection to DB
+        Declare proper connection to API
         '''
         print("You are now connected to the streaming API.")
 
