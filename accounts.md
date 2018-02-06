@@ -16,7 +16,6 @@ users = [
     'veradubs',
     'HarryFerro',
     'pirsarwarras',
-    'RussiaInsider',
     'Rose4Justice',
     'ChristTopNews',
     'actionScript3',
