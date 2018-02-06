@@ -22,7 +22,8 @@ USERS = [
 ]
 
 KEYWORDS = [
-    'MAGA', 'ReleaseTheMemo', 'Nunes'
+    'MAGA', 'ReleaseTheMemo', 'Nunes', 'Mueller', 'Deep State', 'Flynn',
+    'Obama', 'Deplorable',
 ]
 
 class TweetListener(tweepy.StreamListener):
