@@ -42,9 +42,12 @@ class TweetListener(tweepy.StreamListener):
         '''
         Save JSON data to DB
         '''
-        json_data = json.loads(tweet)
-        print("Tweet stored at " + json_data['created_at'])
-        self.db.tweet.insert(json_data)
+        try:
+            json_data = json.loads(tweet)
+            # print("Tweet stored at " + json_data['created_at'])
+            self.db.tweet.insert(json_data)
+        except:
+            pass
 
     def on_connect(self):
         '''
@@ -122,8 +125,8 @@ def main():
     listener = tweepy.Stream(auth, TweetListener(api))
 
     # Track tweets from USERS and KEYWORDS
-    # listener.filter(follow = user_list, track = keywords_list)
-    listener.filter(follow = user_list[:3])
+    listener.filter(follow = user_list, track = keywords_list)
+    # listener.filter(follow = user_list[:3])
     # listener.filter(track = keywords_list)
     # listener.filter(follow = user_list)
 
