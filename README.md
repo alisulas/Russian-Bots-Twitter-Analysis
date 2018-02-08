@@ -17,3 +17,7 @@ AWS_SECRET = 'AWS access secret key'
 ```
 mongod --port 27017 --dbpath "C:\data\db"
 ```
+
+```
+ssh -i "TrentAMOD.pem" ec2-user@ec2-13-58-90-43.us-east-2.compute.amazonaws.com
+```
