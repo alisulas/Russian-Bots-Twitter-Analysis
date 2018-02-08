@@ -8,9 +8,6 @@ API_KEY = 'twitter API key'
 API_SECRET = 'twitter API secret key'
 ACCESS_TOKEN = 'twitter API access token'
 ACCESS_SECRET = 'twitter API access secret token'
-
-AWS_KEY = 'AWS access key
-AWS_SECRET = 'AWS access secret key'
 ```
 
 
