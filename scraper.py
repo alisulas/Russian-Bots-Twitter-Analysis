@@ -2,6 +2,7 @@ import json
 import tweepy
 import config as cfg
 from pymongo import MongoClient
+from retry import retry
 
 MONGO_DB = 'mongodb://localhost:27017/'
 
@@ -44,10 +45,8 @@ class TweetListener(tweepy.StreamListener):
         '''
         try:
             json_data = json.loads(tweet)
-            print("Tweet stored at " + json_data['created_at'])
             self.db.tweet.insert(json_data)
         except:
-            print("Tweet storage error occurred")
             pass
 
     def on_connect(self):
@@ -110,6 +109,7 @@ def convert_username_to_userid(api, filename, usernames):
     append_to_textfile(filename, result)
 
 
+@retry(delay = 60, backoff = 30, max_delay = 600)
 def main():
     # Authenticate with Twitter API
     auth = tweepy.OAuthHandler(cfg.API_KEY, cfg.API_SECRET)
