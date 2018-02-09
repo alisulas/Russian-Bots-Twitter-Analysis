@@ -9,12 +9,3 @@ API_SECRET = 'twitter API secret key'
 ACCESS_TOKEN = 'twitter API access token'
 ACCESS_SECRET = 'twitter API access secret token'
 ```
-
-
-```
-mongod --port 27017 --dbpath "C:\data\db"
-```
-
-```
-ssh -i "TrentAMOD.pem" ec2-user@ec2-13-58-90-43.us-east-2.compute.amazonaws.com
-```
