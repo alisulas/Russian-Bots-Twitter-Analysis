@@ -1,6 +1,4 @@
 import csv
-import json
-from pprint import pprint
 from pymongo import MongoClient
 
 columns = [
@@ -13,7 +11,7 @@ columns = [
     "favorite_count",       # int
     "text",                 # string
     "tweet_id",             # int
-    "source",
+    "source",               # string
     "hashtags",             # string[]
     "expanded_urls",        # string[]
     "mentions",             # string[]
@@ -31,35 +29,43 @@ if __name__ == '__main__':
         write = csv.DictWriter(outfile, fieldnames = fields)
         write.writeheader()
         for row in cursor:
-            # pprint(row)
-            # print("\n\n")
             try:
                 full_text = row["retweeted_status"]["extended_tweet"]["full_text"]
             except:
-                full_text = row['text']
+                try:
+                    full_text = row['text']
+                except:
+                    pass
 
-            hashtags = [elem['text'] for elem in row['entities']['hashtags']]
-            urls     = [elem['expanded_url'] for elem in row['entities']['urls']]
-            mentions = [elem['screen_name'] for elem in row['entities']['user_mentions']]
+            try:
+                hashtags = [elem['text'] for elem in row['entities']['hashtags']]
+                urls     = [elem['expanded_url'] for elem in row['entities']['urls']]
+                mentions = [elem['screen_name'] for elem in row['entities']['user_mentions']]
+            except:
+                hashtags = []
+                urls = []
+                mentions = []
 
-            flattened_record = {
-              "user_id"              : row['id'],
-              "user_key"             : row['user']['screen_name'],
-              "created_at"           : row['timestamp_ms'],
-              "created_str"          : row['created_at'],
-              "retweet_count"        : row['retweet_count'],
-              "retweeted"            : row['retweeted'],
-              "favorite_count"       : row['favorite_count'],
-              "text"                 : full_text,
-              "tweet_id"             : row['id'],
-              "source"               : row.get('source', ''),
-              "hashtags"             : hashtags,
-              "expanded_urls"        : urls,
-              "mentions"             : mentions,
-              # "retweeted_status_id"  : row["retweeted_status"]["id"],
-              "retweeted_status_id"  : row.get('retweeted_status', {}).get('id'),
-              "in_reply_to_status_id": row['in_reply_to_status_id']
-            }
+            try:
+                flattened_record = {
+                  "user_id"              : row['id'],
+                  "user_key"             : row['user']['screen_name'],
+                  "created_at"           : row['timestamp_ms'],
+                  "created_str"          : row['created_at'],
+                  "retweet_count"        : row['retweet_count'],
+                  "retweeted"            : row['retweeted'],
+                  "favorite_count"       : row['favorite_count'],
+                  "text"                 : full_text.encode("utf-8"),
+                  "tweet_id"             : row['id'],
+                  "source"               : row.get('source', ''),
+                  "hashtags"             : hashtags,
+                  "expanded_urls"        : urls,
+                  "mentions"             : mentions,
+                  "retweeted_status_id"  : row.get('retweeted_status', {}).get('id'),
+                  "in_reply_to_status_id": row['in_reply_to_status_id']
+                }
 
-            write.writerow(flattened_record)
+                write.writerow(flattened_record)
+            except:
+                pass
 
