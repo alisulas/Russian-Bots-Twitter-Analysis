@@ -11,6 +11,9 @@ pandas = "*"
 tweepy = "*"
 pymongo = "*"
 retry = "*"
+pillow = "*"
+matplotlib = "*"
+scipy = "*"
 
 [dev-packages]
 
