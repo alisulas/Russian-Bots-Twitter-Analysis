@@ -2,3 +2,12 @@ config.py
 .DS_Store
 __pycache__/
 csv/
+bin/
+include/
+lib/
+etc/
+share/
+pyvenv.cfg
+.venv
+.ipynb_checkpoints
+pip-selfcheck.json
